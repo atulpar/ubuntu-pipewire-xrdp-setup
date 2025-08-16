@@ -43,14 +43,27 @@ echo "🔁 Restarting XRDP..."
 sudo systemctl restart xrdp
 
 ########################################
-# 6️⃣  Verify XRDP audio node
+# 6️⃣ Verify XRDP audio node
 ########################################
 echo "🔍 Verifying XRDP audio stream in PipeWire..."
 pw-cli ls Node | grep -A4 -i xrdp || \
   echo "⚠️ No XRDP audio node detected — check your RDP client audio settings."
 
 ########################################
-# ✅  Done
+# 7️⃣ Add diagnostic alias
+########################################
+echo "🩺 Creating 'check-xrdp-audio' alias..."
+CHECK_CMD="pw-cli ls Node | grep -A4 -i xrdp || echo \"⚠️ No XRDP audio node detected — check RDP client audio settings.\""
+if ! grep -q "check-xrdp-audio" ~/.bashrc; then
+  echo "alias check-xrdp-audio='$CHECK_CMD'" >> ~/.bashrc
+fi
+
+########################################
+# ✅ Done
 ########################################
 echo "Setup complete. Reconnect via RDP with clipboard + audio enabled."
-echo "Look for 'xrdp-sink' in the verification above to confirm audio redirection."
+echo "Look for 'xrdp-sink' above to confirm audio redirection."
+echo "You can re-run the diagnostic anytime by typing: check-xrdp-audio"
+
+
+
